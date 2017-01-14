@@ -31,6 +31,8 @@ class ViewController: UIViewController {
     @IBOutlet weak var fromContainerView: UIView!
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        //just showing a shadow can be animated
         fromContainerView.layoutIfNeeded()
         fromContainerView.layer.cornerRadius = fromContainerView.bounds.width/2
         fromContainerView.layer.borderColor = borderColor.cgColor
@@ -43,10 +45,12 @@ class ViewController: UIViewController {
         internalBlueView.layer.cornerRadius = internalBlueView.bounds.width/2
         internalBlueView.layer.masksToBounds = true
         
+        //modals are supported
+        //to set a view id you can use this in view did load or set it in transitionID in storyboard
+        //someView.transitionID = "someViewID"
         
+        // if we want to stop this just set to nil
         self.navigationController?.delegate = animationDel
-        
-        
     }
     
     override func viewWillAppear(_ animated: Bool) {
