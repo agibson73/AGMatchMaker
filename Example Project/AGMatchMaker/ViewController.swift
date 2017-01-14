@@ -59,7 +59,9 @@ class ViewController: UIViewController {
             let dvc = segue.destination as! DestinationViewController
             dvc.transitioningDelegate = animationDel
         }
-        
+        if self.navigationController != nil{
+            self.navigationItem.backBarButtonItem = UIBarButtonItem(title:"", style:.plain, target:nil, action:nil)
+        }
     }
 
 }

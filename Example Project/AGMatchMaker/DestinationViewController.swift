@@ -26,7 +26,8 @@ class DestinationViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        //change the back button to white
+        self.navigationController?.navigationBar.tintColor = UIColor.white
         // Do any additional setup after loading the view.
     }
 
