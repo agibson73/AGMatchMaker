@@ -82,7 +82,7 @@ public class AGMatchMaker:  NSObject, UIViewControllerTransitioningDelegate, UIV
         for target in targetedFromViews{
             self.performTransitionAnimation(container:container,target: target, targetedToViews: targetedToViews, targetedFromViews: targetedFromViews, transitionContext: transitionContext, toViewController: toViewController, fromViewController: fromViewController)
         }
-        
+
         // complete the animation and clean up
         self.completeAnimation(fromController:fromViewController,toView: toViewController.view,fromView: fromViewController.view, targetedFromViews: targetedFromViews, targetedToViews: targetedToViews, transitionContext: transitionContext)
 
@@ -104,14 +104,6 @@ public class AGMatchMaker:  NSObject, UIViewControllerTransitioningDelegate, UIV
 
             // we create animation group for cornerradius, shadow, and some other stuff.
             let animationGroup = processor.createBasicAnimations(copyFrom:target, copyTo: toTarget,duration:duration * 0.66 * Double(dampening))
-            
-            // unhide the target from view but result is unused
-            let _ = targetedFromViews.filter({if $0.transitionID == target.transitionID{
-                $0.alpha = 1
-                return true
-                }
-                return false
-            })
             
             // this is how we snapshot our targetfrom and create the best snapshot we can as we filter out other animating views
             let targets = processor.processTargetViews(fromTarget: target, toTarget: toTarget,targets: targetedToViews)
@@ -144,12 +136,7 @@ public class AGMatchMaker:  NSObject, UIViewControllerTransitioningDelegate, UIV
                 fromViewController.view.addSubview(fromCopy)
             }
             
-            // add our caanimations
-            fromCopy.layer.add(animationGroup, forKey: nil)
-            toCopy.layer.add(animationGroup, forKey: nil)
             
-            
-            //animate the copies alpha
             UIView.animate(withDuration: (duration * 0.66), delay: 0, options: curveOptions, animations: {
                 fromCopy.alpha = 0
                 toCopy.alpha = 1
@@ -169,6 +156,14 @@ public class AGMatchMaker:  NSObject, UIViewControllerTransitioningDelegate, UIV
                 toCopy.removeFromSuperview()
              
             })
+            
+            //caanimations
+            fromCopy.subviews.first?.layer.add(processor.createBasicAnimationForKeyPath(keypath: "cornerRadius", copyFrom: target, copyTo: toTarget, duration: duration * 0.66 * Double(dampening)),forKey:"cornerRadius")
+            toCopy.subviews.first?.layer.add(processor.createBasicAnimationForKeyPath(keypath: "cornerRadius", copyFrom: target, copyTo: toTarget, duration: duration * 0.66 * Double(dampening)),forKey:"cornerRadius")
+            // add our caanimations
+            fromCopy.layer.add(animationGroup, forKey: nil)
+            toCopy.layer.add(animationGroup, forKey: nil)
+            
 
         }else{
             //unhide immediately

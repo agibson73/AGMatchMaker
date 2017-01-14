@@ -35,56 +35,46 @@ class TransitionProcessor: NSObject {
         }
         var views = [UIView]()
         
-        for vw in view.subviews{
+        for vw in view.subviews.reversed(){
+            views.append(contentsOf: self.retrieveAllViews(view: vw))
             if vw.transitionID.isEmpty == false{
                 views.append(vw)
             }
-            
-            views.append(contentsOf: self.retrieveAllViews(view: vw))
         }
         return views
     }
     
     
     func processTargetViews(fromTarget:UIView,toTarget:UIView,targets:[UIView])->(fromCopy:UIView,toCopy:UIView){
-        
-        
-        let toRadius = toTarget.layer.cornerRadius
         let fromRadius = fromTarget.layer.cornerRadius
 
-        toTarget.alpha = 1
-        
-        
-        let fromBW = fromTarget.layer.borderWidth
-        fromTarget.layer.cornerRadius = 0
-        fromTarget.layer.borderWidth = 0
         let targetIDS = targets.map({$0.transitionID})
-        let fromHolding =  self.retrieveAllViews(view: fromTarget).filter({targetIDS.contains($0.transitionID) && $0.transitionID.isEmpty == false})
+        let fromTargetViews = self.retrieveAllViews(view: fromTarget)
+        let toTargetsSubViews = self.retrieveAllViews(view: toTarget)
+        
+        let fromHolding =  fromTargetViews.filter({targetIDS.contains($0.transitionID) && $0.transitionID.isEmpty == false})
         let _ = fromHolding.map({$0.alpha = 0})
-        let fromCopy = fromTarget.snapshotView()!
+        
+        
+        
+        let fromCopy = fromTarget.snapshotViewWithLayers()
         let _ = fromHolding.map({$0.alpha = 1})
         fromCopy.frame = fromTarget.frame
-        fromTarget.layer.borderWidth = fromBW
         
-        fromTarget.layer.cornerRadius = fromRadius
-        fromCopy.layer.cornerRadius = fromRadius
-        
-        
-        
-        toTarget.layer.cornerRadius = 0
-        let toBorderWidth = toTarget.layer.borderWidth
-        toTarget.layer.borderWidth = 0
-        
-        let toHolding =  self.retrieveAllViews(view: toTarget).filter({targetIDS.contains($0.transitionID) && $0.transitionID.isEmpty == false})
+        let toHolding =  toTargetsSubViews.filter({targetIDS.contains($0.transitionID) && $0.transitionID.isEmpty == false})
         let _ = toHolding.map({$0.alpha = 0})
-        let toCopy = toTarget.snapshotView()!
-        toTarget.layer.cornerRadius = toRadius
-        toTarget.layer.borderWidth = toBorderWidth
+        // unhide the subviews target from view but result is unused
+        let _ = toTargetsSubViews.filter({if $0.transitionID.isEmpty {
+            $0.alpha = 1
+            return true
+            }
+            return false
+        })
+        
+        
+        let toCopy = toTarget.snapshotViewWithLayers()
         toCopy.frame = fromTarget.frame
         toCopy.layer.cornerRadius = fromRadius
-       
-        
-        
         fromTarget.alpha = 0
         toTarget.alpha = 0
         toCopy.alpha = 0.5
@@ -125,6 +115,46 @@ class TransitionProcessor: NSObject {
         animation.fillMode = kCAFillModeForwards
         
         return animation
+    }
+    
+    func animateKeypathsAlongSide(keypaths:[String],copyFrom:UIView,copyTo:UIView,duration:Double)->CAAnimationGroup{
+
+        
+        let animationGroup = CAAnimationGroup()
+        var caAnimations = [CABasicAnimation]()
+        for keypath in keypaths{
+            if copyFrom.layer.value(forKeyPath: keypath) != nil && copyTo.layer.value(forKeyPath: keypath) != nil{
+                caAnimations.append(createBasicAnimationForKeyPath(keypath:keypath,copyFrom: copyFrom, copyTo: copyTo,duration:duration))
+            }
+            
+        }
+        
+        animationGroup.animations = caAnimations
+        animationGroup.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
+        animationGroup.isRemovedOnCompletion = false
+        animationGroup.fillMode = kCAFillModeForwards
+        animationGroup.duration = duration
+        animationGroup.beginTime = CACurrentMediaTime()
+        return animationGroup
+        
+        
+    }
+
+    func animateAlongSide(animateViewAlongSide:UIView, viewToMatch:UIView){
+        print("we are animating a match")
+        guard let animationKeys = viewToMatch.layer.animationKeys() else{return}
+        print("keys are a go")
+        for key in animationKeys{
+            let anim = viewToMatch.layer.animation(forKey: key)
+            if anim is CAPropertyAnimation{
+                let propertyAnim = anim as! CAPropertyAnimation
+                if propertyAnim.keyPath! == "bounds.size" || propertyAnim.keyPath! == "cornerRadius"{
+                    print("add this animation")
+                    animateViewAlongSide.layer.add(propertyAnim, forKey: key)
+                }
+            }
+        }
+        
     }
     
     //MARK: Helpers (some may be unused at this point)

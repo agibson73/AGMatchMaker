@@ -27,13 +27,26 @@ class ViewController: UIViewController {
 
     let animationDel = AGMatchMaker()
     let borderColor : UIColor = #colorLiteral(red: 0.9584442973, green: 0.3839759827, blue: 0.3574679196, alpha: 1)
-    @IBOutlet weak var fromView: UIView!
+    @IBOutlet weak var internalBlueView: UIView!
+    @IBOutlet weak var fromContainerView: UIView!
     override func viewDidLoad() {
         super.viewDidLoad()
-        fromView.layer.cornerRadius = fromView.bounds.width/2
-        fromView.layer.borderColor = borderColor.cgColor
-        fromView.layer.borderWidth = 3
+        fromContainerView.layoutIfNeeded()
+        fromContainerView.layer.cornerRadius = fromContainerView.bounds.width/2
+        fromContainerView.layer.borderColor = borderColor.cgColor
+        fromContainerView.layer.borderWidth = 3
+        fromContainerView.layer.shadowOffset = CGSize(width: 0, height: 10)
+        fromContainerView.layer.shadowOpacity = 0.5
+        fromContainerView.layer.shadowRadius = 4
+        
+        
+        internalBlueView.layer.cornerRadius = internalBlueView.bounds.width/2
+        internalBlueView.layer.masksToBounds = true
+        
+        
         self.navigationController?.delegate = animationDel
+        
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {

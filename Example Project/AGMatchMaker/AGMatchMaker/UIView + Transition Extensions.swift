@@ -42,12 +42,58 @@ public extension UIView {
         if let snapshotImage = snapshotImage() {
             let v = UIImageView(image: snapshotImage)
             v.bounds = self.bounds
+            v.autoresizingMask = [.flexibleWidth,.flexibleHeight]
             v.layer.masksToBounds = true
             return v
         } else {
             return nil
         }
     }
+    
+    /**
+     - Returns: a snapshot view for animation
+     */
+    public func snapshotViewWithLayers() -> UIView {
+        
+        self.alpha = 1
+        // capture a snapshot without cornerRadius
+        let oldCornerRadius = self.layer.cornerRadius
+        self.layer.cornerRadius = 0
+        let oldBorderWidth = self.layer.borderWidth
+        self.layer.borderWidth = 0
+        
+        
+        let CV = self.snapshotView()!
+        CV.translatesAutoresizingMaskIntoConstraints = true
+        let snapshot = UIView(frame: self.frame)
+        snapshot.bounds = self.bounds
+        snapshot.addSubview(CV)
+        self.layer.cornerRadius = oldCornerRadius
+        self.layer.borderWidth = oldBorderWidth
+        // the Snapshot's contentView must have hold the cornerRadius value,
+        // since the snapshot might not have maskToBounds set
+        let contentView = snapshot.subviews[0]
+        contentView.layer.cornerRadius = self.layer.cornerRadius
+        contentView.layer.masksToBounds = true
+        
+        snapshot.layer.cornerRadius = self.layer.cornerRadius
+        snapshot.layer.zPosition = self.layer.zPosition
+        snapshot.layer.opacity = layer.opacity
+        snapshot.layer.isOpaque = layer.isOpaque
+        snapshot.layer.anchorPoint = layer.anchorPoint
+        snapshot.layer.masksToBounds = layer.masksToBounds
+        snapshot.layer.borderColor = layer.borderColor
+        snapshot.layer.borderWidth = layer.borderWidth
+        snapshot.layer.transform = layer.transform
+        snapshot.layer.shadowRadius = layer.shadowRadius
+        snapshot.layer.shadowOpacity = layer.shadowOpacity
+        snapshot.layer.shadowColor = layer.shadowColor
+        snapshot.layer.shadowOffset = layer.shadowOffset
+        
+        return snapshot
+    }
+
+    
 }
 
 // this is to allow identifiers in storyboard
@@ -72,5 +118,16 @@ public extension UIView{
         set(value) {
             objc_setAssociatedObject(self,&AssociatedKeys.transitionID,value,objc_AssociationPolicy.OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         }
+    }
+}
+
+internal extension CALayer{
+    // return all animations running by this layer.
+    // the returned value is mutable
+    var animations:[(String, CAAnimation)]{
+        if let keys = animationKeys(){
+            return keys.map{ return ($0, self.animation(forKey: $0)!.copy() as! CAAnimation) }
+        }
+        return []
     }
 }
