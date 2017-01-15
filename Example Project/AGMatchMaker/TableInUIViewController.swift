@@ -33,6 +33,7 @@ class TableInUIViewController: UIViewController,UITableViewDelegate,UITableViewD
         tableView.delegate = self
         tableView.dataSource = self
         // Do any additional setup after loading the view.
+        self.navigationController?.delegate = nil
     }
 
     // MARK: - Table view data source
@@ -49,7 +50,6 @@ class TableInUIViewController: UIViewController,UITableViewDelegate,UITableViewD
     
      func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ourCell", for: indexPath) as! TestTableViewCell
-
         cell.selectionStyle = .none
         return cell
     }
@@ -60,20 +60,18 @@ class TableInUIViewController: UIViewController,UITableViewDelegate,UITableViewD
     
      func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath) as! TestTableViewCell
-        cell.testView.transitionID = "blueView"
+        cell.testView.transitionID = "container"
         cell.circleView.transitionID = "avatarView"
         tableView.deselectRow(at: indexPath, animated: true)
-        self.performSegue(withIdentifier: "trans", sender: nil)
+        self.performSegue(withIdentifier: "modalSegue", sender: nil)
     }
     
     // MARK: - Navigation
        override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-        
-        if segue.identifier != "testImage"{
-            let dvc = segue.destination
+        if segue.identifier == "modalSegue"{
+            let dvc = segue.destination as! DestinationViewController
             dvc.transitioningDelegate = animator
+            dvc.shouldHideDismiss = false
         }
         
     }

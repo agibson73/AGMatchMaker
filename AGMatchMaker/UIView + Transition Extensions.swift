@@ -26,7 +26,7 @@ import UIKit
 public extension UIView {
 
     public func snapshotImage() -> UIImage? {
-        UIGraphicsBeginImageContextWithOptions(bounds.size, false, 0)
+        UIGraphicsBeginImageContextWithOptions(bounds.size, isOpaque, 0)
         guard let context = UIGraphicsGetCurrentContext() else{ return nil}
         context.translateBy(x: -bounds.origin.x, y: -bounds.origin.y)
         self.layoutIfNeeded()

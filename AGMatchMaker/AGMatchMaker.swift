@@ -69,6 +69,17 @@ public class AGMatchMaker:  NSObject, UIViewControllerTransitioningDelegate, UIV
         toViewController.view.layoutSubviews()
         toViewController.view.setNeedsLayout()
         
+        let containsCellFrom = targetedFromViews.filter({if processor.isInsideCell(view: $0) == true{
+                return true
+            }
+            return false
+        })
+        
+        let containsCellTo = targetedToViews.filter({if processor.isInsideCell(view: $0) == true{
+            return true
+            }
+            return false
+        })
         
         
         //our main container animation
@@ -79,9 +90,17 @@ public class AGMatchMaker:  NSObject, UIViewControllerTransitioningDelegate, UIV
         }, completion: nil)
         
         // check and trigger individual animations
-        for target in targetedFromViews{
-            self.performTransitionAnimation(container:container,target: target, targetedToViews: targetedToViews, targetedFromViews: targetedFromViews, transitionContext: transitionContext, toViewController: toViewController, fromViewController: fromViewController)
+        // need a better method to order the views
+        if containsCellFrom.count > 0 || containsCellTo.count > 0{
+            for target in targetedFromViews.reversed(){
+                self.performTransitionAnimation(container:container,target: target, targetedToViews: targetedToViews, targetedFromViews: targetedFromViews, transitionContext: transitionContext, toViewController: toViewController, fromViewController: fromViewController)
+            }
+        }else{
+            for target in targetedFromViews{
+                self.performTransitionAnimation(container:container,target: target, targetedToViews: targetedToViews, targetedFromViews: targetedFromViews, transitionContext: transitionContext, toViewController: toViewController, fromViewController: fromViewController)
+            }
         }
+        
 
         // complete the animation and clean up
         self.completeAnimation(fromController:fromViewController,toView: toViewController.view,fromView: fromViewController.view, targetedFromViews: targetedFromViews, targetedToViews: targetedToViews, transitionContext: transitionContext)
@@ -124,18 +143,19 @@ public class AGMatchMaker:  NSObject, UIViewControllerTransitioningDelegate, UIV
             }else if toViewController is UITabBarController {
                 (toViewController as! UITabBarController).selectedViewController?.view.addSubview(toCopy)
             }else{
-                toViewController.view.addSubview(toCopy)
+                
                
             }
+            toViewController.view.addSubview(toCopy)
             
             if fromViewController is UINavigationController{
                 (fromViewController as! UINavigationController).topViewController?.view.addSubview(fromCopy)
             }else if fromViewController is UITabBarController{
                 (fromViewController as! UITabBarController).selectedViewController?.view.addSubview(fromCopy)
             }else{
-                fromViewController.view.addSubview(fromCopy)
+               
             }
-            
+             fromViewController.view.addSubview(fromCopy)
             
             UIView.animate(withDuration: (duration * 0.66), delay: 0, options: curveOptions, animations: {
                 fromCopy.alpha = 0

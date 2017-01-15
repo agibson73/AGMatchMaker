@@ -52,29 +52,31 @@ class ViewController: UIViewController {
         // if we want to stop this just set to nil
         self.navigationController?.delegate = animationDel
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        self.startAnimation()
-    }
-    
-    func startAnimation(){
-        let when = DispatchTime.now() + 2
+
+
+    @IBAction func pushDidPress(_ sender: Any) {
+        let when = DispatchTime.now() + 0.5
         DispatchQueue.main.asyncAfter(deadline: when) {
-            self.performSegue(withIdentifier: "test", sender: self)
+           self.performSegue(withIdentifier: "pushSegue", sender: nil)
         }
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    @IBAction func presentModallyDidPress(_ sender: Any) {
+        let when = DispatchTime.now() + 0.5
+        DispatchQueue.main.asyncAfter(deadline: when) {
+            self.performSegue(withIdentifier: "modalSegue", sender: nil)
+        }
     }
-
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "test"{
+        if segue.identifier == "pushSegue"{
             let dvc = segue.destination as! DestinationViewController
             dvc.transitioningDelegate = animationDel
+            dvc.shouldHideDismiss = true
+        }else{
+            let dvc = segue.destination as! DestinationViewController
+            dvc.transitioningDelegate = animationDel
+            dvc.shouldHideDismiss = false
         }
         if self.navigationController != nil{
             self.navigationItem.backBarButtonItem = UIBarButtonItem(title:"", style:.plain, target:nil, action:nil)

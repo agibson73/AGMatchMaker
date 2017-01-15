@@ -24,19 +24,41 @@ import UIKit
 
 class DestinationViewController: UIViewController {
 
+    @IBOutlet weak var dismissButton: UIButton!
+    @IBOutlet weak var avatarView: UIView!
+    override var preferredStatusBarStyle: UIStatusBarStyle{
+        get{
+            return .lightContent
+        }
+    }
+    
+    var shouldHideDismiss = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         //change the back button to white
         self.navigationController?.navigationBar.tintColor = UIColor.white
-        // Do any additional setup after loading the view.
+        //shape our avatar view
+        avatarView.layoutIfNeeded()
+        avatarView.layer.cornerRadius = avatarView.bounds.height/2
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        if shouldHideDismiss == true{
+            dismissButton.alpha = 0
+        }else{
+            dismissButton.alpha = 1
+        }
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        dismissButton.alpha = 0
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
 
-        let when = DispatchTime.now() + 2
-        DispatchQueue.main.asyncAfter(deadline: when) {
-            self.dismiss(animated: true, completion: nil)
-        }
+    @IBAction func dismissDidPress(_ sender: Any) {
+         self.dismiss(animated: true, completion: nil)
     }
 }

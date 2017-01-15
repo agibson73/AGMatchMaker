@@ -83,7 +83,7 @@
                     <navigationItem key="navigationItem" id="eYr-zu-H5h"/>
                     <connections>
                         <outlet property="tableView" destination="Dh2-0r-jyO" id="CtS-Xm-ukN"/>
-                        <segue destination="OaR-Qc-drx" kind="presentation" identifier="trans" id="loz-oU-nDi"/>
+                        <segue destination="OaR-Qc-drx" kind="presentation" identifier="modalSegue" id="vvJ-ge-8aq"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="2Wy-gt-3PC" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -144,7 +144,49 @@
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2i6-8J-gBu">
                                 <rect key="frame" x="171.33333333333337" y="621" width="242.66666666666663" height="95"/>
+                                <subviews>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IlI-KL-xNT">
+                                        <rect key="frame" x="10" y="10" width="222.66666666666666" height="75"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="100" horizontalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="33G-XN-gKR">
+                                                <rect key="frame" x="0.0" y="0.0" width="106.66666666666666" height="75"/>
+                                                <state key="normal" title="Push">
+                                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="pushDidPress:" destination="BYZ-38-t0r" eventType="touchUpInside" id="4vL-3U-ikp"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" horizontalCompressionResistancePriority="749" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tNJ-Gl-sbb">
+                                                <rect key="frame" x="111.66666666666666" y="0.0" width="111" height="75"/>
+                                                <state key="normal" title="Present Modally">
+                                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="presentModallyDidPress:" destination="BYZ-38-t0r" eventType="touchUpInside" id="zBu-ea-xvb"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstItem="tNJ-Gl-sbb" firstAttribute="leading" secondItem="33G-XN-gKR" secondAttribute="trailing" constant="5" id="0KB-kg-zUm"/>
+                                            <constraint firstAttribute="bottom" secondItem="tNJ-Gl-sbb" secondAttribute="bottom" id="6cX-eK-qWl"/>
+                                            <constraint firstAttribute="bottom" secondItem="33G-XN-gKR" secondAttribute="bottom" id="Ds9-II-mf1"/>
+                                            <constraint firstItem="tNJ-Gl-sbb" firstAttribute="centerY" secondItem="IlI-KL-xNT" secondAttribute="centerY" id="V9t-c1-bQo"/>
+                                            <constraint firstAttribute="trailing" secondItem="tNJ-Gl-sbb" secondAttribute="trailing" id="bgH-xP-uE8"/>
+                                            <constraint firstItem="33G-XN-gKR" firstAttribute="leading" secondItem="IlI-KL-xNT" secondAttribute="leading" id="ilg-Hy-ZQX"/>
+                                            <constraint firstItem="tNJ-Gl-sbb" firstAttribute="top" secondItem="IlI-KL-xNT" secondAttribute="top" id="t8F-5H-S5i"/>
+                                            <constraint firstItem="33G-XN-gKR" firstAttribute="top" secondItem="IlI-KL-xNT" secondAttribute="top" id="uQy-xW-8Qp"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="IlI-KL-xNT" firstAttribute="top" secondItem="2i6-8J-gBu" secondAttribute="top" constant="10" id="Utg-6D-7RA"/>
+                                    <constraint firstItem="IlI-KL-xNT" firstAttribute="leading" secondItem="2i6-8J-gBu" secondAttribute="leading" constant="10" id="lLY-eF-Vin"/>
+                                    <constraint firstAttribute="bottom" secondItem="IlI-KL-xNT" secondAttribute="bottom" constant="10" id="qDB-LC-R9T"/>
+                                    <constraint firstAttribute="trailing" secondItem="IlI-KL-xNT" secondAttribute="trailing" constant="10" id="xNg-ul-GPw"/>
+                                </constraints>
                             </view>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -169,7 +211,8 @@
                     <connections>
                         <outlet property="fromContainerView" destination="nv7-RP-vrk" id="KCf-YX-OYC"/>
                         <outlet property="internalBlueView" destination="Yh1-Ox-lwF" id="75F-kU-pJA"/>
-                        <segue destination="OaR-Qc-drx" kind="show" identifier="test" id="8I1-iX-PoQ"/>
+                        <segue destination="OaR-Qc-drx" kind="show" identifier="pushSegue" id="8I1-iX-PoQ"/>
+                        <segue destination="OaR-Qc-drx" kind="presentation" identifier="modalSegue" id="uE0-j4-4bH"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -193,7 +236,22 @@
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xAA-bo-MFm">
                                         <rect key="frame" x="0.0" y="0.0" width="414" height="441.66666666666669"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mos-Pa-kr3">
+                                                <rect key="frame" x="340" y="30" width="54" height="30"/>
+                                                <state key="normal" title="Dismiss">
+                                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="dismissDidPress:" destination="OaR-Qc-drx" eventType="touchUpInside" id="6yL-VP-6sF"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
                                         <color key="backgroundColor" red="0.0" green="0.57171165943145752" blue="0.82947641611099243" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="trailing" secondItem="Mos-Pa-kr3" secondAttribute="trailing" constant="20" id="ZAc-SE-w5t"/>
+                                            <constraint firstItem="Mos-Pa-kr3" firstAttribute="top" secondItem="xAA-bo-MFm" secondAttribute="top" constant="30" id="fjO-vi-2u4"/>
+                                        </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="u08-RB-wEA">
                                         <rect key="frame" x="271" y="94" width="115" height="118"/>
@@ -267,10 +325,14 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="5Kd-FO-u9Q"/>
+                    <connections>
+                        <outlet property="avatarView" destination="3x0-lw-a7Z" id="vs5-eg-UY7"/>
+                        <outlet property="dismissButton" destination="Mos-Pa-kr3" id="zZV-4v-rs7"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="TrB-Eh-MMb" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1441" y="-1038"/>
+            <point key="canvasLocation" x="1871" y="-1222"/>
         </scene>
         <!--Item-->
         <scene sceneID="7Fu-IN-c3i">
@@ -285,7 +347,7 @@
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="XbG-07-lt4"/>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="6ra-qe-xVf"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uvk-vD-7O6" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -294,6 +356,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="loz-oU-nDi"/>
+        <segue reference="8I1-iX-PoQ"/>
     </inferredMetricsTieBreakers>
 </document>
