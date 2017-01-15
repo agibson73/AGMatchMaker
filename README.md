@@ -10,9 +10,7 @@ Todo list is to fix any existing bugs and use a different snapshot
 method with a container that will allow layer animations beyond border
 color and corner radius.
 
-This is the second time I had to do this because I deleted everything
-early one morning or late one night I cannot remember so give me time
-to get the rest of it back and running.
+Works with Show and Present Modally
 
 Example project is included:
 Set the transitionID(Interface Builder or Code) on the two linked view controllers and add and set the AGMatchMaker in the controller and let it go.
